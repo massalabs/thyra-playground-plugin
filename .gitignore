@@ -16,3 +16,5 @@
 
 pkg/massa-sc-tester
 pkg/massa-sc-tester.exe
+pkg/simulator_config.json
+pkg/main.wasm

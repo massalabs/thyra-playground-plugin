@@ -1,0 +1,5 @@
+{
+    "name":"sc-playground",
+    "bin": "main",
+    "version": "0.0.1"
+}

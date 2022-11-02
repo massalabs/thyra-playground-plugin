@@ -1,7 +1,10 @@
 #!/bin/bash
 set -ex
 
-mkdir -p build/simulator
-node scripts/get-simulator.js -o build
-go build -o build/thyra-playground-plugin cmd/main.go
-cp manifest.json build/
+PLUGIN=playground-plugin
+
+mkdir -p "build/$PLUGIN/simulator"
+# node scripts/get-simulator.js -o build/$PLUGIN
+cp simulator/massa-sc-tester* build/$PLUGIN/simulator
+go build -o build/$PLUGIN/thyra-playground-plugin cmd/main.go
+cp manifest.json build/$PLUGIN/

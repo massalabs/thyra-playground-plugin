@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 )
 
 func RunSimulation() error {
@@ -33,7 +34,11 @@ func RunSimulation() error {
 		return errors.New(errMsg)
 	}
 
-	cmd := exec.Command("./simulator/massa-sc-tester", "simulator/"+configFileName)
+	exe := ""
+	if runtime.GOOS == "windows" {
+		exe = ".exe"
+	}
+	cmd := exec.Command("./simulator/massa-sc-tester"+exe, "simulator/"+configFileName)
 	stdout, err := cmd.Output()
 	// Print the output
 	log.Println(string(stdout))
@@ -43,9 +48,6 @@ func RunSimulation() error {
 		log.Fatal(err.Error())
 		return err
 	}
-
-	// delete config
-	// os.Remove("./pkg/" + configFileName)
 
 	// Move simulator result to static files
 	os.Rename("ledger.json", "./static/ledger.json")

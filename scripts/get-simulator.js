@@ -25,7 +25,7 @@ switch (process.platform) {
 const url = `${TESTER_RELEASE_URL}/${VERSION}/${fileName}`;
 
 let outputDir = path.join(process.cwd(), "simulator");
-fs.mkdirSync(outputDir);
+fs.mkdirSync(outputDir, { recursive: true });
 
 const cmd = `wget -qO- ${url} | tar xz -C ${outputDir} --strip-components 1`;
 child_process.execSync(cmd);

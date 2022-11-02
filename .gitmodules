@@ -1,3 +1,4 @@
 [submodule "massa-sc-playground"]
 	path = massa-sc-playground
 	url = git@github.com:massalabs/massa-sc-playground.git
+	branch = main

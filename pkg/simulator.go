@@ -15,7 +15,7 @@ func RunSimulation() error {
 	configFileName := "simulator_config.json"
 	simulatorBin := "massa-sc-tester"
 
-	path, err := os.Getwd()
+	path, _ := os.Getwd()
 	simulatorPath := filepath.Join(path, "simulator")
 
 	//check simulator binary

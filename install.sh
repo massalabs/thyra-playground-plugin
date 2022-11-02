@@ -7,9 +7,11 @@ git submodule update
 
 # Copy static files
 mkdir "cmd/static"
+ls cmd/static
 pushd massa-sc-playground
 cp -r libs favicons index.html index.css module.js ../cmd/static
 popd
 
 # Download simulator
 node scripts/get-simulator.js
+ls simulator

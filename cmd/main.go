@@ -6,7 +6,10 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+
+	"path/filepath"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -17,6 +20,7 @@ func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	router := gin.Default()
+	path, _ := os.Getwd()
 
 	// 	curl -X POST http://localhost:8080/simulate \
 	//   -F "files=@./simulator_config.json" \
@@ -27,6 +31,7 @@ func setupRouter() *gin.Engine {
 		form, _ := c.MultipartForm()
 		files := form.File["files"]
 
+		simulatorPath := filepath.Join(path, "simulator")
 		if len(files) != 2 {
 			c.String(http.StatusUnauthorized, "/simulate expects 2 files.")
 			return
@@ -39,7 +44,8 @@ func setupRouter() *gin.Engine {
 				c.String(http.StatusUnauthorized, "Unauthorized file names. Should bu simulator_config.json and main.wasm")
 				return
 			}
-			c.SaveUploadedFile(file, "./simulator/"+file.Filename)
+
+			c.SaveUploadedFile(file, filepath.Join(simulatorPath, file.Filename))
 		}
 
 		err := simulator.RunSimulation()
@@ -48,8 +54,6 @@ func setupRouter() *gin.Engine {
 			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
-		router.StaticFile("/simulator/ledger.json", "./ledger.json")
-		router.StaticFile("/simulator/trace.json", "./trace.json")
 
 		type Res struct {
 			LedgerUrl string
@@ -58,6 +62,9 @@ func setupRouter() *gin.Engine {
 		res := &Res{LedgerUrl: c.Request.Host + "/simulator/ledger.json", TracesUrl: c.Request.Host + "/simulator/trace.json"}
 		c.PureJSON(http.StatusOK, res)
 	})
+
+	router.StaticFile("/simulator/ledger.json", filepath.Join(path, "ledger.json"))
+	router.StaticFile("/simulator/trace.json", filepath.Join(path, "trace.json"))
 
 	return router
 }

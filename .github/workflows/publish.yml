@@ -2,32 +2,20 @@ name: Build and publish
 
 # on:
 #   push:
-#     tags:
-#       - v*
-on: [push]
+#     branches: [ main ]
 
-env:
-  CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: full
+on: [push]
 
 jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            name: release_linux.tar.gz
-          - os: windows-latest
-            name: release_windows.zip
-          - os: macOS-latest
-            name: release_macos.tar.gz
+        os: [ubuntu-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-go@v3
         with:
           go-version: '>=1.19.2'
@@ -39,18 +27,8 @@ jobs:
         run: |
           ./install.sh
           ./build.sh
-        # if [[ "${{ matrix.os }}" == "windows-latest" ]]
-        # then
-        #   7z a ${{ matrix.name }} build
-        # else
-        #   tar czvf ${{ matrix.name }} build
-        # fi
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Playground-plugin-${{ matrix.os }}
           path: build
-      # - name: Publish
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #       files: 'release_*'

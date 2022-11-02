@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 )
 
@@ -14,22 +15,18 @@ func RunSimulation() error {
 	configFileName := "simulator_config.json"
 	simulatorBin := "massa-sc-tester"
 
+	path, err := os.Getwd()
+	simulatorPath := filepath.Join(path, "simulator")
+
 	//check simulator binary
-	if _, err := os.Stat("./simulator/" + simulatorBin); err != nil {
+	if _, err := os.Stat(filepath.Join(simulatorPath, simulatorBin)); err != nil {
 		errMsg := "unable to find simulator " + simulatorBin
 		log.Fatal(errMsg)
 		return errors.New(errMsg)
 	}
 	//check simulator config file
-	if _, err := os.Stat("./simulator/" + configFileName); err != nil {
+	if _, err := os.Stat(filepath.Join(simulatorPath, configFileName)); err != nil {
 		errMsg := "unable to find " + configFileName
-		log.Fatal(errMsg)
-		return errors.New(errMsg)
-	}
-
-	//check simulator binary
-	if _, err := os.Stat("./simulator/" + simulatorBin); err != nil {
-		errMsg := "unable to find simulator " + simulatorBin
 		log.Fatal(errMsg)
 		return errors.New(errMsg)
 	}
@@ -38,7 +35,7 @@ func RunSimulation() error {
 	if runtime.GOOS == "windows" {
 		exe = ".exe"
 	}
-	cmd := exec.Command("./simulator/massa-sc-tester"+exe, "simulator/"+configFileName)
+	cmd := exec.Command(filepath.Join(simulatorPath, simulatorBin)+exe, filepath.Join(simulatorPath, configFileName))
 	stdout, err := cmd.Output()
 	// Print the output
 	log.Println(string(stdout))
@@ -50,7 +47,7 @@ func RunSimulation() error {
 	}
 
 	// Move simulator result to static files
-	os.Rename("ledger.json", "./static/ledger.json")
-	os.Rename("trace.json", "./static/trace.json")
+	os.Rename("ledger.json", filepath.Join(path, "static", "ledger.json"))
+	os.Rename("trace.json", filepath.Join(path, "static", "trace.json"))
 	return nil
 }

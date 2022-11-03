@@ -2,7 +2,7 @@ name: Build and publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   release:
@@ -16,7 +16,7 @@ jobs:
           submodules: true
       - uses: actions/setup-go@v3
         with:
-          go-version: '>=1.19.2'
+          go-version: ">=1.19.2"
       - uses: actions/setup-node@v3
         with:
           node-version: 16

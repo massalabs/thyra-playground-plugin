@@ -27,13 +27,20 @@ func setupRouter() *gin.Engine {
 	//   -F "files=@./main.wasm" \
 	//   -H "Content-Type: multipart/form-data"
 	router.POST("/simulate", func(c *gin.Context) {
-		// Multipart form
-		form, _ := c.MultipartForm()
+		form, err := c.MultipartForm()
+		if err != nil {
+			log.Fatal(err.Error())
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
 		files := form.File["files"]
 
 		simulatorPath := filepath.Join(path, "simulator")
 		if len(files) != 2 {
-			c.String(http.StatusUnauthorized, "/simulate expects 2 files.")
+			msg := "/simulate expects 2 files."
+			log.Fatal(msg)
+			c.String(http.StatusUnauthorized, msg)
 			return
 		}
 		for _, file := range files {
@@ -48,7 +55,7 @@ func setupRouter() *gin.Engine {
 			c.SaveUploadedFile(file, filepath.Join(simulatorPath, file.Filename))
 		}
 
-		err := simulator.RunSimulation()
+		err = simulator.RunSimulation()
 		if err != nil {
 			log.Fatal(err.Error())
 			c.String(http.StatusInternalServerError, err.Error())

@@ -2,8 +2,8 @@
 set -ex
 
 # Init playground submodule
-# git submodule init
-# git submodule update
+git submodule init
+git submodule update
 
 # Copy static files
 mkdir -p cmd/static

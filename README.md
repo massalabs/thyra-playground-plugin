@@ -17,7 +17,7 @@ The backend api is used to execute the smart contract simulator and return the r
 
 This script performs the following actions:
 - create a ```build``` directory.
--  downloads the simulator binary for the current OS in ```build/simulator```.
+- downloads the simulator binary for the current OS in ```build/simulator```.
 - launch the Go build process which produce a ```thyra-playground-plugin``` binary in ```build```
 - copy the ```manifest.json``` file in ```build``` 
 

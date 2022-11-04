@@ -17,8 +17,7 @@ import (
 )
 
 func setupRouter() *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
+
 	router := gin.Default()
 	path, _ := os.Getwd()
 

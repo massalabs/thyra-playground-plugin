@@ -37,15 +37,10 @@ func RunSimulation() error {
 	}
 
 	cmd := exec.Command(filepath.Join(simulatorPath, simulatorBin)+exe, filepath.Join(simulatorPath, configFileName))
-	stdout, err := cmd.Output()
-	// Print the output
-	log.Println(string(stdout))
+	stdout, err := cmd.CombinedOutput()
 	if err != nil {
-		return errors.New("Smart contract simulation failed")
+		return errors.New("Smart contract simulation failed: " + string(stdout))
 	}
 
-	// Move simulator result to static files
-	os.Rename("ledger.json", filepath.Join(path, "static", "ledger.json"))
-	os.Rename("trace.json", filepath.Join(path, "static", "trace.json"))
 	return nil
 }

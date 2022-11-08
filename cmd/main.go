@@ -69,8 +69,20 @@ func setupRouter() *gin.Engine {
 		c.PureJSON(http.StatusOK, res)
 	})
 
-	router.StaticFile("/simulator/ledger.json", filepath.Join(path, "ledger.json"))
-	router.StaticFile("/simulator/trace.json", filepath.Join(path, "trace.json"))
+	ledgerPath := filepath.Join(path, "ledger.json")
+	tracePath := filepath.Join(path, "trace.json")
+
+	// We create empty files because the frontend use these files presence to detect if the simulator is available...
+	// These files will be written later by the simulator
+	ledgerFile, _ := os.Create(ledgerPath)
+	ledgerFile.WriteString("{}")
+	defer ledgerFile.Close()
+	traceFile, _ := os.Create(tracePath)
+	traceFile.WriteString("{}")
+	defer traceFile.Close()
+
+	router.StaticFile("/simulator/ledger.json", ledgerPath)
+	router.StaticFile("/simulator/trace.json", tracePath)
 
 	return router
 }

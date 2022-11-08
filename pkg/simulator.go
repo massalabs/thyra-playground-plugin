@@ -9,14 +9,13 @@ import (
 	"runtime"
 )
 
-func RunSimulation() error {
+func RunSimulation(pluginPath string) error {
 	log.Println(" Runnig massa sc simulator")
 
 	configFileName := "simulator_config.json"
 	simulatorBin := "massa-sc-tester"
 
-	path, _ := os.Getwd()
-	simulatorPath := filepath.Join(path, "simulator")
+	simulatorPath := filepath.Join(pluginPath, "simulator")
 
 	exe := ""
 	if runtime.GOOS == "windows" {
@@ -41,6 +40,11 @@ func RunSimulation() error {
 	if err != nil {
 		return errors.New("Smart contract simulation failed: " + string(stdout))
 	}
+
+	// move results files in plugin folder
+	path, _ := os.Getwd()
+	os.Rename(filepath.Join(path, "ledger.json"), filepath.Join(pluginPath, "ledger.json"))
+	os.Rename(filepath.Join(path, "trace.json"), filepath.Join(pluginPath, "trace.json"))
 
 	return nil
 }

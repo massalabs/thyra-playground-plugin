@@ -16,10 +16,9 @@ import (
 	simulator "github.com/massalabs/thyra-playground-plugin/pkg"
 )
 
-func setupRouter() *gin.Engine {
+func setupRouter(pluginPath string) *gin.Engine {
 
 	router := gin.Default()
-	path, _ := os.Getwd()
 
 	// 	curl -X POST http://localhost:8080/simulate \
 	//   -F "files=@./simulator_config.json" \
@@ -35,7 +34,7 @@ func setupRouter() *gin.Engine {
 
 		files := form.File["files"]
 
-		simulatorPath := filepath.Join(path, "simulator")
+		simulatorPath := filepath.Join(pluginPath, "simulator")
 		if len(files) != 2 {
 			msg := "/simulate expects 2 files."
 			log.Fatal(msg)
@@ -54,7 +53,7 @@ func setupRouter() *gin.Engine {
 			c.SaveUploadedFile(file, filepath.Join(simulatorPath, file.Filename))
 		}
 
-		err = simulator.RunSimulation()
+		err = simulator.RunSimulation(pluginPath)
 		if err != nil {
 			log.Fatal(err.Error())
 			c.String(http.StatusInternalServerError, err.Error())
@@ -69,8 +68,8 @@ func setupRouter() *gin.Engine {
 		c.PureJSON(http.StatusOK, res)
 	})
 
-	ledgerPath := filepath.Join(path, "ledger.json")
-	tracePath := filepath.Join(path, "trace.json")
+	ledgerPath := filepath.Join(pluginPath, "ledger.json")
+	tracePath := filepath.Join(pluginPath, "trace.json")
 
 	// We create empty files because the frontend use these files presence to detect if the simulator is available...
 	// These files will be written later by the simulator
@@ -118,9 +117,11 @@ func embedStatics(router *gin.Engine) {
 
 func main() {
 	port := flag.Int("port", 8080, "set listening port")
+	path, _ := os.Getwd()
+	pluginPath := flag.String("path", path, "set listening port")
 	flag.Parse()
 
-	router := setupRouter()
+	router := setupRouter(*pluginPath)
 	embedStatics(router)
 
 	router.Run("127.0.0.1:" + strconv.Itoa(*port))

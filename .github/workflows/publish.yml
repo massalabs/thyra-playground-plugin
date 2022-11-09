@@ -1,14 +1,28 @@
 name: Build and publish
 
-on:
-  push:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
+
+on: [push]
 
 jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+            target: windows
+          - os: ubuntu-latest
+            arch: amd64
+            target: linux
+          - os: macos-latest
+            arch: amd64
+            target: darwin
+          - os: macos-latest
+            arch: arm64
+            target: darwin
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -24,9 +38,11 @@ jobs:
         shell: bash
         run: |
           ./install.sh
+          export GOOS=${{ matrix.target }}
+          export GOARCH=${{ matrix.arch }}
           ./build.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Playground-plugin-${{ matrix.os }}
+          name: Playground-plugin-${{ matrix.target }}_${{ matrix.arch }}
           path: build

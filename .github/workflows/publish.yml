@@ -1,10 +1,8 @@
 name: Build and publish
 
-# on:
-#   push:
-#     branches: [main]
-
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   release:
@@ -37,9 +35,9 @@ jobs:
       - name: Build binary and prepare archive for publish
         shell: bash
         run: |
-          ./install.sh
           export GOOS=${{ matrix.target }}
           export GOARCH=${{ matrix.arch }}
+          ./install.sh
           ./build.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v3

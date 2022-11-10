@@ -26,7 +26,7 @@ In development mode:
 
 ```go run cmd/main.go```
 
-Run the builded binary:
+Run the built binary:
 
 ```cd build && ./thyra-playground-plugin```
 

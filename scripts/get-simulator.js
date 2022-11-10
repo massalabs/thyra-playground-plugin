@@ -5,7 +5,7 @@ const path = require("path");
 
 const TESTER_RELEASE_URL =
   "https://github.com/massalabs/massa-sc-tester/releases/download";
-const VERSION = "v0.3.1";
+const VERSION = "v0.3.2";
 
 // env var used by the CI
 const GOOS = process.env["GOOS"];
@@ -17,14 +17,13 @@ if (process.platform === "win32" || GOOS === "windows") {
   fileName = "release_windows.zip";
   platformName = "Windows";
 } else if (process.platform === "darwin" || GOOS === "darwin") {
-  // Use this code when  simulator will be available for MacOs arm64
-  // if (process.arch === "arm64" || GOARCH === "arm64") {
-  //   fileName = "release_macos-arm64.tar.gz";
-  //   platformName = "MacOs arm64";
-  // } else {
-  fileName = "release_macos.tar.gz";
-  platformName = "MacOs amd64";
-  // }
+  if (process.arch === "arm64" || GOARCH === "arm64") {
+    fileName = "release_macos-arm64.tar.gz";
+    platformName = "MacOs arm64";
+  } else {
+    fileName = "release_macos-amd64.tar.gz";
+    platformName = "MacOs amd64";
+  }
 } else {
   platformName = "Linux";
   fileName = "release_linux.tar.gz";

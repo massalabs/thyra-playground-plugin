@@ -10,7 +10,7 @@ import (
 )
 
 func RunSimulation(pluginPath string) error {
-	log.Println(" Runnig massa sc simulator")
+	log.Println("Runnig massa sc simulator")
 
 	configFileName := "simulator_config.json"
 	simulatorBin := "massa-sc-tester"
@@ -43,8 +43,10 @@ func RunSimulation(pluginPath string) error {
 
 	// move results files in plugin folder
 	path, _ := os.Getwd()
-	os.Rename(filepath.Join(path, "ledger.json"), filepath.Join(pluginPath, "ledger.json"))
-	os.Rename(filepath.Join(path, "trace.json"), filepath.Join(pluginPath, "trace.json"))
+	ledgerFile := "ledger.json"
+	traceFile := "trace.json"
+	os.Rename(filepath.Join(path, ledgerFile), filepath.Join(pluginPath, ledgerFile))
+	os.Rename(filepath.Join(path, traceFile), filepath.Join(pluginPath, traceFile))
 
 	return nil
 }

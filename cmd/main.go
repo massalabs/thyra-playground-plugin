@@ -28,7 +28,7 @@ func setupRouter(pluginPath string) *gin.Engine {
 		form, err := c.MultipartForm()
 		if err != nil {
 			log.Fatal(err.Error())
-			c.String(http.StatusInternalServerError, err.Error())
+			c.String(http.StatusBadRequest, err.Error())
 			return
 		}
 
@@ -38,7 +38,7 @@ func setupRouter(pluginPath string) *gin.Engine {
 		if len(files) != 2 {
 			msg := "/simulate expects 2 files."
 			log.Fatal(msg)
-			c.String(http.StatusUnauthorized, msg)
+			c.String(http.StatusBadRequest, msg)
 			return
 		}
 		for _, file := range files {
@@ -46,7 +46,7 @@ func setupRouter(pluginPath string) *gin.Engine {
 
 			if file.Filename != "simulator_config.json" && file.Filename != "main.wasm" {
 				log.Fatal("unauthorized filename " + file.Filename)
-				c.String(http.StatusUnauthorized, "Unauthorized file names. Should bu simulator_config.json and main.wasm")
+				c.String(http.StatusBadRequest, "Unauthorized file names. Should bu simulator_config.json and main.wasm")
 				return
 			}
 

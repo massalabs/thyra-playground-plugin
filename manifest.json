@@ -1,0 +1,5 @@
+{
+    "name":"Playground plugin",
+    "bin": "thyra-playground-plugin",
+    "version": "0.0.1"
+}

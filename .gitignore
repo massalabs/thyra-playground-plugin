@@ -13,3 +13,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+build
+
+simulator/massa-sc-tester
+simulator/massa-sc-tester.exe
+simulator/simulator_config.json
+simulator/main.wasm
+
+cmd/static

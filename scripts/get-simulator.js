@@ -35,15 +35,17 @@ let outputDir = path.join(process.cwd(), "simulator");
 fs.mkdirSync(outputDir, { recursive: true });
 
 console.log(`Downloading simulator binary for ${platformName} at url: ${url}`);
-child_process.execSync(
-  `curl -Lso ${fileName} ${url} && tar xf ${fileName} -C ${outputDir} --strip-components 1`
-);
+child_process.execSync(`curl -Ls ${url} -o ${fileName}`);
 
-let cmd;
-if (platformName === "Windows") {
-  cmd = `del ${fileName}`;
+let cmd = `tar -xzf ${fileName} -C ${outputDir} --strip-components 1`;
+if (process.platform === "win32") {
+  cmd += ` && del ${fileName}`;
 } else {
-  cmd = `rm ${fileName}`;
+  if (platformName === "Windows") {
+    // special case for the CI cross compile
+    cmd = `unzip -j ${fileName}   "massa/massa-sc-tester.exe" -d ${outputDir}`;
+  }
+  cmd += ` && rm ${fileName}`;
 }
 console.log(`Extracting simulator binary in ${outputDir}`);
 child_process.execSync(cmd);

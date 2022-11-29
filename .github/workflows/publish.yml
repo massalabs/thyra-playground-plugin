@@ -32,6 +32,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Install Xcode
+        if: ${{ matrix.os == 'macos-latest' }}
+        uses: devbotsxyz/xcode-select@v1
       - name: Build binary and prepare archive for publish
         shell: bash
         run: |
